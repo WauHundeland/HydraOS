@@ -29,10 +29,6 @@ public:
     void onAppClose() override {
     }
 
-    void onAppResume() override {
-        // Code to run when App1 resumes
-    }
-
     void onAppTick() override {
         Utils::initCanvas();
         StatusBar::draw(true);

@@ -98,6 +98,7 @@ void setup() {
     AppManager::getInstance().addApp("Calculator", new Calculator());
     AppManager::getInstance().addApp("Settings", new Settings());
     AppManager::getInstance().addApp("LEDApp", new LEDApp());
+    // add more apps here
     AppManager::getInstance().openApp("AppLauncher");
 }
 

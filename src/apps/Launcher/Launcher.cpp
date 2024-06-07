@@ -41,10 +41,6 @@ public:
         apps.clear();
     }
 
-    void onAppResume() override {
-
-    }
-
     void onAppTick() override {
         if (needRedraw) {
             Utils::initCanvas();

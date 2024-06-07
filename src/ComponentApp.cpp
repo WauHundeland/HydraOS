@@ -13,10 +13,6 @@ void ComponentApp::onAppClose() {
     currentComponent->closeComponent();
 }
 
-void ComponentApp::onAppResume() {
-
-}
-
 void ComponentApp::onAppTick() {
     currentComponent->updateComponent();
 }

@@ -16,7 +16,6 @@ public:
     void addApp(const std::string& name, App* app);
     void openApp(const std::string& name);
     void closeCurrentApp();
-    void resumeCurrentApp() const;
     void tickCurrentApp() const;
     void draw() const;
     String getCurrentAppName() const;

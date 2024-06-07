@@ -21,8 +21,6 @@ public:
 
     void onAppClose() override;
 
-    void onAppResume() override;
-
     void onAppTick() override;
 
     void draw() override;

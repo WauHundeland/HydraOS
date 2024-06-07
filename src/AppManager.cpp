@@ -39,12 +39,6 @@ void AppManager::closeCurrentApp() {
     }
 }
 
-void AppManager::resumeCurrentApp() const {
-    if (currentApp != nullptr) {
-        currentApp->onAppResume();
-    }
-}
-
 void AppManager::tickCurrentApp() const {
     if (currentApp != nullptr) {
         currentApp->onAppTick();
