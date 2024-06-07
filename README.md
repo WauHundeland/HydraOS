@@ -8,6 +8,7 @@ can be used in applications.
 Some basic apps are bundled with the full version of HydraOS. These apps include:
 - Calculator: A simple calculator app based on tinyexpr
 - LED App: A simple app that allows you to control the onboard LED
+- Dino Run: A simple game where you control a dinosaur to avoid obstacles
 - Settings: A simple settings app that allows you to change the system settings
 ## Concepts
 ### Apps
