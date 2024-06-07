@@ -26,9 +26,17 @@ To install HydraOS, clone the repository and run the following command:
 pio run -t upload
 ```
 This will compile the code and upload it to the M5Cardputer. 
+## Roadmap
+The following features are planned for future versions of HydraOS:
+1. [ ] Standalone usable components
+2. [ ] More bundled apps
+3. [ ] Launching of third-party apps
+4. [ ] App store
 ## Contributing
 If you would like to contribute to HydraOS, please feel free to fork the repository and submit a pull request.
-We are always looking for ways to improve the system and would love to hear your ideas.
+You can also submit issues if you find any bugs or have any feature requests.
+We are always looking for ways to improve the system and would love to hear your ideas. If you have developed an app
+for HydraOS, please let us know and we will consider bundling it with the system.
 
 ## License
 HydraOS is licensed under the MIT License. Please see the LICENSE file for more information.
