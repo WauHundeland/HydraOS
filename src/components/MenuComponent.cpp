@@ -12,13 +12,18 @@
 
 void MenuComponent::initComponent() {
     Utils::initCanvas();
+    StatusBar::draw();
     canvas.setTextSize(2);
 
     needRedraw = true;
+    drawFinished = false;
     selectIndex = 0;
 }
 
 void MenuComponent::renderComponent() {
+    if (!drawFinished) {
+        return;
+    }
     canvas.pushSprite(0, 0);
 }
 
@@ -34,7 +39,7 @@ void MenuComponent::updateComponent() {
         auto const &function = *it;
 
         int x = 10;
-        int y = 25;
+        int y = 28;
         int offset = 0;
 
         // if mode is one of the icon modes, draw the icon
@@ -80,9 +85,9 @@ void MenuComponent::updateComponent() {
                 }
             } else {
                 // display the 2 last, the current and the next 2 apps
-                if ((selectIndex < 2 && i < 5) ||
-                    (selectIndex >= 2 && selectIndex < appsSize - 2 && i >= selectIndex - 2 && i <= selectIndex + 2) ||
-                    (selectIndex >= appsSize - 2 && i >= appsSize - 5)) {
+                if ((selectIndex < 3 && i < 6) ||
+                    (selectIndex >= 3 && selectIndex < appsSize - 2 && i >= selectIndex - 3 && i <= selectIndex + 2) ||
+                    (selectIndex >= appsSize - 2 && i >= appsSize - 6)) {
                     // current app: green
                     if (i == selectIndex) {
                         canvas.setTextColor(GREEN);
@@ -118,6 +123,7 @@ void MenuComponent::updateComponent() {
         }
 
         needRedraw = false;
+        drawFinished = true;
     }
     M5Cardputer.update();
     if (M5Cardputer.Keyboard.isChange()) {

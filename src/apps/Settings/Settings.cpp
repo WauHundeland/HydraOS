@@ -42,13 +42,20 @@ public:
         });
 
         actions.emplace_back("wifi", "Connect to WiFi", "", "", [this]() {
+            if (WiFi.status() == WL_CONNECTED) {
+                Utils::popup("Already connected\nSSID:"
+                                + WiFi.SSID() + "\nIP: " + WiFi.localIP().toString(), 0, 1.5);
+                this->currentComponent->forceRerender();
+                return;
+            }
             Utils::initCanvas();
             StatusBar::draw(true);
+            canvas.setTextSize(1.5);
             canvas.drawString("SSID", 7, 30);
-            canvas.drawFastHLine(5, 40, 230, WHITE);
-            canvas.drawFastHLine(5, 55, 230, WHITE);
-            canvas.setCursor(8, 42);
-            canvas.drawString("Press G0 to exit", 7, 60);
+            canvas.drawFastHLine(5, 45, 230, WHITE);
+            canvas.drawFastHLine(5, 60, 230, WHITE);
+            canvas.setCursor(8, 47);
+            canvas.drawString("Press G0 to exit", 7, 65);
             canvas.pushSprite(0, 0);
             String ssid = "";
             Utils::waitForInput(ssid);
@@ -58,12 +65,13 @@ public:
             }
             Utils::initCanvas();
             StatusBar::draw(true);
+            canvas.setTextSize(1.5);
             canvas.drawString("SSID: " + ssid, 7, 30);
             canvas.drawString("Password", 7, 50);
-            canvas.drawFastHLine(5, 60, 230, WHITE);
-            canvas.drawFastHLine(5, 75, 230, WHITE);
-            canvas.setCursor(8, 62);
-            canvas.drawString("Press G0 to exit", 7, 80);
+            canvas.drawFastHLine(5, 65, 230, WHITE);
+            canvas.drawFastHLine(5, 80, 230, WHITE);
+            canvas.setCursor(8, 67);
+            canvas.drawString("Press G0 to exit", 7, 85);
             canvas.pushSprite(0, 0);
             String pass = "";
             Utils::waitForInput(pass);
@@ -85,7 +93,7 @@ public:
                 preferences.putString("ssid", ssid);
                 preferences.putString("pass", pass);
             } else {
-                Utils::popup("Failed to connect to WiFi", 0, 1.5);
+                Utils::popup("Failed to connect\n to WiFi", 0, 1.5);
             }
             this->currentComponent->forceRerender();
         });
@@ -93,7 +101,7 @@ public:
         actions.emplace_back("scan", "Scan WiFi", "", "", [this]() {
             Utils::initCanvas();
             StatusBar::draw(true);
-            canvas.drawString("Scanning WiFi... This can take a while...", 7, 30);
+            canvas.drawString("Scanning WiFi... Please wait", 7, 30);
             canvas.pushSprite(0, 0);
             int n = WiFi.scanNetworks();
             Utils::initCanvas();
@@ -127,17 +135,24 @@ public:
         });
 
         actions.emplace_back("pin", "Set pin code", "", "", [this]() {
+            if (preferences.isKey("pin")) {
+                Utils::popup("Pin code already set", 0);
+                this->currentComponent->forceRerender();
+                return;
+            }
             Utils::initCanvas();
             StatusBar::draw(true);
+            canvas.setTextSize(1.5);
             canvas.drawString("Enter 4 digit pin code", 7, 30);
-            canvas.drawFastHLine(5, 40, 230, WHITE);
-            canvas.drawFastHLine(5, 55, 230, WHITE);
-            canvas.setCursor(8, 42);
-            canvas.drawString("Press G0 to exit", 7, 60);
-            canvas.drawString("You have to enter the pin on boot", 7, 70);
+            canvas.drawFastHLine(5, 45, 230, WHITE);
+            canvas.drawFastHLine(5, 65, 230, WHITE);
+            canvas.setCursor(8, 47);
+            canvas.drawString("Press G0 to exit", 7, 70);
+            canvas.drawString("You have to enter the pin on boot", 7, 84);
             canvas.pushSprite(0, 0);
             String pin = "";
-            Utils::waitForInput(pin, 4, 8, true);
+            canvas.setTextSize(2);
+            Utils::centerInput(pin, 4, 16, true);
             if (pin == "exit" || pin == "") {
                 this->currentComponent->forceRerender();
                 return;
@@ -153,14 +168,16 @@ public:
             // confirm pin
             Utils::initCanvas();
             StatusBar::draw(true);
+            canvas.setTextSize(1.5);
             canvas.drawString("Confirm pin code", 7, 30);
-            canvas.drawFastHLine(5, 40, 230, WHITE);
-            canvas.drawFastHLine(5, 55, 230, WHITE);
-            canvas.setCursor(8, 42);
-            canvas.drawString("Press G0 to exit", 7, 60);
+            canvas.drawFastHLine(5, 45, 230, WHITE);
+            canvas.drawFastHLine(5, 65, 230, WHITE);
+            canvas.setCursor(8, 47);
+            canvas.drawString("Press G0 to abort", 7, 70);
             canvas.pushSprite(0, 0);
             String confirmPin = "";
-            Utils::waitForInput(confirmPin, 4, 8, true);
+            canvas.setTextSize(2);
+            Utils::centerInput(confirmPin, 4, 16, true);
             if (confirmPin == "exit" || confirmPin == "") {
                 this->currentComponent->forceRerender();
                 return;
@@ -183,14 +200,16 @@ public:
             }
             Utils::initCanvas();
             StatusBar::draw(true);
+            canvas.setTextSize(1.5);
             canvas.drawString("Enter 4 digit pin code", 7, 30);
-            canvas.drawFastHLine(5, 40, 230, WHITE);
-            canvas.drawFastHLine(5, 55, 230, WHITE);
-            canvas.setCursor(8, 42);
+            canvas.drawFastHLine(5, 45, 230, WHITE);
+            canvas.drawFastHLine(5, 65, 230, WHITE);
+            canvas.setCursor(8, 47);
             canvas.drawString("Press G0 to exit", 7, 60);
             canvas.pushSprite(0, 0);
             String pin = "";
-            Utils::waitForInput(pin, 4, 8, true);
+            canvas.setTextSize(2);
+            Utils::centerInput(pin, 4, 16, true);
             if (pin == "exit" || pin == "") {
                 this->currentComponent->forceRerender();
                 return;

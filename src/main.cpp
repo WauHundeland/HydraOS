@@ -10,19 +10,20 @@
 #include "apps/Settings/Settings.cpp"
 #include "apps/LEDApp/LEDApp.cpp"
 #include "apps/DinoRunner/DinoRunner.cpp"
+#include "apps/AudioRecorder/AudioRec.cpp"
 #include "Preferences.h"
 
-void base() {
+void base(const String &text = "") {
     canvas.fillScreen(BLACK);
     canvas.setTextSize(1);
     canvas.drawRoundRect(5, 5, 230, 125, 7, WHITE);
     canvas.drawFastHLine(5, 20, 230, WHITE);
     canvas.drawString("HydraOS 2.0.0", 10, 9);
-    canvas.drawRightString(AppManager::getInstance().getCurrentAppName(), 230, 9);
+    canvas.drawRightString(text, 230, 9);
 }
 // the remaining area is 230x105 pixels
 
-void rabbitOSLogoAnimation(int percent) {
+void hydraOSLogoAnimation(int percent) {
     base();
     // Draw the rabbitOS logo partially as by the given percent
     int width = 64;
@@ -33,14 +34,17 @@ void rabbitOSLogoAnimation(int percent) {
     // draw gradient line as bottom border based on percent
     int lineWidth = 230 * percent / 100;
     for (int i = 0; i < 5; i++) {
-        canvas.drawGradientHLine(5, 130-1-i, lineWidth +3, GREEN, CYAN);
+        canvas.drawGradientHLine(5, 130 - 1 - i, lineWidth + 3, GREEN, CYAN);
     }
     canvas.drawCenterString("Press any key to skip", 120, 110);
     canvas.pushSprite(0, 0);
 }
 
 SPIClass SPI2;
+
 void setup() {
+    Serial.begin(115200);
+    Serial.println("Starting HydraOS");
     Adafruit_NeoPixel pixels = Adafruit_NeoPixel(1, 21, NEO_GRB + NEO_KHZ800);
     pixels.setPixelColor(0, Adafruit_NeoPixel::Color(0, 0, 0));
     pixels.show();
@@ -64,14 +68,14 @@ void setup() {
     }
     preferences.begin("hydra_base", false);
     if (preferences.isKey("ssid")) {
-        WiFi.mode(WIFI_STA);
+        WiFiClass::mode(WIFI_STA);
         WiFi.begin(preferences.getString("ssid").c_str(), preferences.getString("pass").c_str());
     }
     pin:
     // ask for pin code
     if (preferences.isKey("pin")) {
         Utils::initCanvas();
-        StatusBar::draw(true);
+        base("Security");
         canvas.setTextSize(1.5);
         canvas.drawString("Enter pin code", 7, 30);
         canvas.drawFastHLine(5, 50, 230, WHITE);
@@ -80,26 +84,27 @@ void setup() {
         canvas.setTextSize(2);
         canvas.pushSprite(0, 0);
         String pin = "";
-        Utils::waitForInput(pin, 4, 18);
+        Utils::centerInput(pin, 4, 18, true);
         if (pin != preferences.getString("pin")) {
             Utils::popup("Wrong pin code", 0);
             goto pin;
         }
     }
-    for (int i = 0; i < 100; i++) {
-        rabbitOSLogoAnimation(i);
-        delay(15);
-        M5Cardputer.update();
-        if (M5Cardputer.Keyboard.isPressed()) {
-            break;
-        }
-    }
+    //for (int i = 0; i < 100; i++) {
+    //    hydraOSLogoAnimation(i);
+    //    delay(15);
+    //    M5Cardputer.update();
+    //    if (M5Cardputer.Keyboard.isPressed()) {
+    //        break;
+    //    }
+    //}
     Utils::initCanvas();
     AppManager::getInstance().addApp("AppLauncher", new Launcher());
     AppManager::getInstance().addApp("Calculator", new Calculator());
     AppManager::getInstance().addApp("Settings", new Settings());
     AppManager::getInstance().addApp("LEDApp", new LEDApp());
     AppManager::getInstance().addApp("DinoRunner", new DinoRunner());
+    AppManager::getInstance().addApp("AudioRecorder", new AudioRecorder());
     // add more apps here
     AppManager::getInstance().openApp("AppLauncher");
 }

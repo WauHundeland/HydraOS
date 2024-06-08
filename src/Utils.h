@@ -33,6 +33,8 @@ public:
 
     // split a string by a delimiter
     static std::vector<String> splitString(const String &s, char delimiter);
+
+    static void centerInput(String &input, const int x, const int hdl_t, const bool passwordMode);
 };
 
 

@@ -9,6 +9,7 @@
 #include "ScreenManager.h"
 #include "SD.h"
 #include "assets/hydra.h"
+#include "Action.h"
 
 void Utils::waitForInput(String &input, const int x, const int hdl_t, const bool passwordMode) {
     // if key is pressed, wait for release
@@ -77,6 +78,83 @@ void Utils::waitForInput(String &input, const int x, const int hdl_t, const bool
     }
 }
 
+void Utils::centerInput(String &input, const int x, const int hdl_t, const bool passwordMode) {
+    // if key is pressed, wait for release
+    if (M5Cardputer.Keyboard.isPressed()) {
+        while (M5Cardputer.Keyboard.isPressed()) {
+            M5Cardputer.update();
+            delay(50);
+        };
+    }
+
+    static int cursorY = 0;
+    unsigned long lastKeyPressMillis = 0;
+    const unsigned long debounceDelay = 130; // Adjust debounce delay as needed
+    String currentInput = input;
+
+    while (true) {
+        M5Cardputer.update();
+        if (M5Cardputer.Keyboard.isChange()) {
+            Keyboard_Class::KeysState status = M5Cardputer.Keyboard.keysState();
+
+            if (status.del && currentInput.length() > 0) {
+                // Handle backspace key
+                cursorY = canvas.getCursorY();
+                currentInput.remove(currentInput.length() - 1);
+                canvas.fillRect(7, cursorY, 230, hdl_t, BLACK);
+                canvas.setCursor(8, cursorY);
+                if (passwordMode) {
+                    String buffer = "";
+                    for (int i = 0; i < currentInput.length(); i++) {
+                        buffer += "*";
+                    }
+                    canvas.drawCenterString(buffer, 120, cursorY);
+                } else {
+                    canvas.drawCenterString(currentInput, 120, cursorY);
+                }
+                canvas.drawRoundRect(5, 5, 230, 125, 7, WHITE);
+                canvas.pushSprite(0, 0);
+                cursorY = canvas.getCursorY();
+                lastKeyPressMillis = millis();
+            }
+
+            for (auto i: status.word) {
+                if (millis() - lastKeyPressMillis >= debounceDelay) {
+                    if (currentInput.length() >= x) {
+                        continue;
+                    }
+                    cursorY = canvas.getCursorY();
+                    currentInput += i;
+                    canvas.fillRect(7, cursorY, 230, hdl_t, BLACK);
+                    if (passwordMode) {
+                        String buffer = "";
+                        for (int i = 0; i < currentInput.length(); i++) {
+                            buffer += "*";
+                        }
+                        canvas.drawCenterString(buffer, 120, cursorY);
+                    } else {
+                        canvas.drawCenterString(currentInput, 120, cursorY);
+                    }
+                    canvas.drawRoundRect(5, 5, 230, 125, 7, WHITE);
+                    canvas.pushSprite(0, 0);
+                    lastKeyPressMillis = millis();
+                    cursorY = canvas.getCursorY();
+                }
+            }
+
+            if (status.enter) {
+                canvas.println(); // Move to the next line
+                input = currentInput;
+                break;
+            }
+        }
+        if (M5.BtnA.isPressed()) {
+            input = "exit";
+            break;
+        }
+    }
+}
+
 void Utils::waitForKey() {
     M5Cardputer.update();
     // if key is pressed, wait for release
@@ -108,7 +186,7 @@ void Utils::popup(const String &text, int waitMode, float textSize) {
     canvas.drawRoundRect(20, 20, 200, 100, 10, WHITE);
     // each newline in text is a new line using canvas.drawCenterString(text, 120, 60 + (i * 8));
     int i = 0;
-    for (const String &line : splitString(text, '\n')) {
+    for (const String &line: splitString(text, '\n')) {
         canvas.drawCenterString(line, 120, 30 + (i * 8 * textSize));
         i++;
     }

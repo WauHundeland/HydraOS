@@ -84,7 +84,7 @@ public:
             // draw the obstacles
             for (DinoObstacle &obstacle : obstacles) {
                 // delete the obstacle if it is out of the screen
-                if (obstacle.x < 0) {
+                if (obstacle.x < 10) {
                     obstacles.erase(obstacles.begin());
                 }
                 canvas.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height, GREEN);

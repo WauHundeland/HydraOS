@@ -32,6 +32,7 @@ private:
     std::string iconNamespace;
 
     ComponentApp &app;
+    bool drawFinished = false;
 public:
     boolean needRedraw;
     MenuComponent(ComponentApp &currentapp, MenuType menuType, const std::vector<Action> &functions, std::string iconNamespace = "");
