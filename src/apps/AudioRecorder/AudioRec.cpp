@@ -16,6 +16,8 @@ private:
     Audio audio;
 public:
     Component &initApp() override {
+        M5Cardputer.Speaker.stop();
+        M5Cardputer.Speaker.end();
         audio.setPinout(41, 43, 42);
         std::vector<Action> actions;
         actions.emplace_back("record", "New recording", "", "", [this]() {
@@ -70,11 +72,11 @@ public:
 
             // begin recording
             // if key is pressed, wait for key release
-            //if (M5Cardputer.Keyboard.isPressed()) {
-            //    while (M5Cardputer.Keyboard.isPressed()) {
-            //        delay(50);
-            //    }
-            //}
+            if (M5Cardputer.Keyboard.isPressed()) {
+                while (M5Cardputer.Keyboard.isPressed()) {
+                    delay(50);
+                }
+            }
             // record until key is pressed
             while (true) {
                 M5Cardputer.update();
