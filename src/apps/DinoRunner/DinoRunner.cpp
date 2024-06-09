@@ -66,7 +66,7 @@ public:
         dinoY = 100;
         dinoWidth = 10;
         dinoHeight = 10;
-        obstacles.emplace_back(220, 100, 10, 10, 2);
+        obstacles.emplace_back(240, 100, 10, 10, 2);
         obstacleSpawnTimer = 70;
     }
 
@@ -84,7 +84,7 @@ public:
             // draw the obstacles
             for (DinoObstacle &obstacle : obstacles) {
                 // delete the obstacle if it is out of the screen
-                if (obstacle.x < 10) {
+                if (obstacle.x < -obstacle.width) {
                     obstacles.erase(obstacles.begin());
                 }
                 canvas.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height, GREEN);
@@ -92,7 +92,7 @@ public:
                 if (obstacle.x < dinoX + dinoWidth && obstacle.x + obstacle.width > dinoX && obstacle.y < dinoY + dinoHeight && obstacle.y + obstacle.height > dinoY) {
                     isGameOver = true;
                 }
-                if (obstacle.x < (dinoX+10) && !obstacle.isPassed) {
+                if (obstacle.x < (dinoX-5) && !obstacle.isPassed) {
                     score++;
                     obstacle.isPassed = true;
                     // add a new obstacle with random properties
@@ -125,10 +125,14 @@ public:
                 int randomHeight = random(10, 20);
                 int randomWidth = random(5, 20);
                 int randomSpeed = random(2, 3);
-                obstacles.emplace_back(230-randomWidth, 100 - randomHeight + 10, randomWidth, randomHeight, randomSpeed);
+                obstacles.emplace_back(240, 100 - randomHeight + 10, randomWidth, randomHeight, randomSpeed);
                 // reset the spawn timer to a random value
                 obstacleSpawnTimer = random(30, 65);
             }
+
+            canvas.fillRect(0, 0, 5, 135, BLACK);
+            canvas.fillRect(235, 0, 5, 135, BLACK);
+            canvas.drawRoundRect(5, 5, 230, 125, 7, WHITE);
         }
     }
 

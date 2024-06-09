@@ -74,8 +74,9 @@ public:
             // if key is pressed, wait for key release
             if (M5Cardputer.Keyboard.isPressed()) {
                 while (M5Cardputer.Keyboard.isPressed()) {
+                    M5Cardputer.update();
                     delay(50);
-                }
+                };
             }
             // record until key is pressed
             while (true) {
