@@ -136,11 +136,18 @@ public:
                     // copy name to avoid dangling pointer
                     String name = entry.name();
                     recordings.emplace_back(name.c_str(), name.c_str(), "", "", [this, name]() {
+                        // if key is pressed, wait for key release
+                        if (M5Cardputer.Keyboard.isPressed()) {
+                            while (M5Cardputer.Keyboard.isPressed()) {
+                                M5Cardputer.update();
+                                delay(50);
+                            };
+                        }
                         Utils::initCanvas();
                         StatusBar::draw(true);
                         canvas.setTextSize(1.5);
                         canvas.drawCenterString("Playing...", 120, 40);
-                        audio.setVolume(20);
+                        audio.setVolume(21);
                         audio.connecttoFS(SD, ("/hydra/rec/" + name).c_str());
                         while (audio.isRunning()) {
                             audio.loop();
